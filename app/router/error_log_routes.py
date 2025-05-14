@@ -7,6 +7,11 @@ from typing import Dict, List, Optional
 
 from fastapi import (
     APIRouter,
+)
+import pytz # Import pytz for timezone handling
+from app.config.config import settings # Import settings to get timezone config
+
+from fastapi import (
     Body,
     HTTPException,
     Path,
@@ -43,7 +48,7 @@ class ErrorLogListResponse(BaseModel):
 @router.get("/errors", response_model=ErrorLogListResponse)
 async def get_error_logs_api(
     request: Request,
-    limit: int = Query(10, ge=1, le=1000),
+    limit: int = Query(10, ge=1, le=2000),
     offset: int = Query(0, ge=0),
     key_search: Optional[str] = Query(
         None, description="Search term for Gemini key (partial match)"
@@ -102,6 +107,19 @@ async def get_error_logs_api(
         )
         logs_data = result["logs"]
         total_count = result["total"]
+
+        # Convert request_time to configured timezone before returning
+        configured_timezone = pytz.timezone(settings.TIMEZONE)
+        for log in logs_data:
+            if log.get("request_time") and isinstance(log["request_time"], datetime):
+                # Ensure the datetime object is timezone-aware before normalizing
+                if log["request_time"].tzinfo is None:
+                     # Assuming naive datetime from DB is UTC, or handle appropriately
+                     # For simplicity, let's assume naive is UTC for now based on error_log_service analysis
+                     log["request_time"] = log["request_time"].replace(tzinfo=pytz.utc)
+
+                log["request_time"] = configured_timezone.normalize(log["request_time"])
+
 
         validated_logs = [ErrorLogListItem(**log) for log in logs_data]
         return ErrorLogListResponse(logs=validated_logs, total=total_count)

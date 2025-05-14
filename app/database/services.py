@@ -4,6 +4,7 @@
 from typing import List, Optional, Dict, Any, Union
 from datetime import datetime
 from sqlalchemy import func, desc, asc, select, insert, update, delete
+import pytz # Import pytz for timezone handling
 import json
 from app.database.connection import database
 from app.database.models import Settings, ErrorLog, RequestLog
@@ -139,7 +140,7 @@ async def add_error_log(
                 model_name=model_name,
                 error_code=error_code,
                 request_msg=request_msg_json,
-                request_time=datetime.now()
+                request_time=pytz.timezone(settings.TIMEZONE).localize(datetime.now()) # Use configured timezone
             )
         )
         await database.execute(query)

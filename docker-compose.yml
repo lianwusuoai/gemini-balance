@@ -6,7 +6,9 @@ services:
     container_name: gemini-balance
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "3610:8000"
+    environment: # Add environment section
+      - TZ=Asia/Shanghai # Set timezone to Asia/Shanghai
     env_file:
       - .env
     depends_on:

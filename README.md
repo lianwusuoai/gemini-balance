@@ -86,7 +86,7 @@ app/
 2. **运行容器**:
 
     ```bash
-    docker run -d -p 8000:8000 --env-file .env gemini-balance
+    docker run -d -p 3610:8000 --env-file .env gemini-balance
     ```
 
     * `-d`: 后台运行。

@@ -236,6 +236,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial load of error logs
     loadErrorLogs();
+// Debug: Print pageSize options
+    if (pageSizeSelector) {
+        console.log("PageSize options:");
+        for (let i = 0; i < pageSizeSelector.options.length; i++) {
+            console.log(`Option value: ${pageSizeSelector.options[i].value}, text: ${pageSizeSelector.options[i].text}`);
+        }
+    }
 
     // Add event listeners for copy buttons inside the modal and table
     // This needs to be called after initial render and potentially after each render if content is dynamic

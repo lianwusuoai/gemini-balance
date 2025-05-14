@@ -1,4 +1,4 @@
-fastapi
+﻿fastapi
 httpx[socks]
 openai
 pydantic
@@ -19,3 +19,4 @@ databases
 python-dotenv
 apscheduler
 packaging
+pytz # Added for timezone handling
